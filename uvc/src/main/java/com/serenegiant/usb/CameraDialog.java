@@ -138,7 +138,7 @@ public class CameraDialog extends DialogFragment {
 	private final View initView() {
 		final View rootView = getActivity().getLayoutInflater().inflate(R.layout.dialog_camera, null);
 		mSpinner = (Spinner)rootView.findViewById(R.id.spinner1);
-		final View empty = rootView.findViewById(R.id.empty);
+		final View empty = rootView.findViewById(android.R.id.empty);
 		mSpinner.setEmptyView(empty);
 		return rootView;
 	}

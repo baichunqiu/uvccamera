@@ -43,23 +43,14 @@ import androidx.annotation.NonNull;
 import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.CameraDialog;
 import com.serenegiant.usb.USBMonitor;
+import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
+import com.serenegiant.usb.USBMonitor.UsbControlBlock;
 import com.serenegiant.usb.UVCCamera;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
-import com.serenegiant.view.ViewAnimationHelper;
+import com.serenegiant.utils.ViewAnimationHelper;
 import com.serenegiant.widget.CameraViewInterface;
-import com.serenegiant.widget.UVCCameraTextureView;
 
-//import com.serenegiant.common.BaseActivity;
-//import com.serenegiant.usb.CameraDialog;
-//import com.serenegiant.usb.USBMonitor;
-//import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
-//import com.serenegiant.usb.USBMonitor.UsbControlBlock;
-//import com.serenegiant.usb.UVCCamera;
-//import com.serenegiant.usbcameracommon.UVCCameraHandler;
-//import com.serenegiant.utils.ViewAnimationHelper;
-//import com.serenegiant.widget.CameraViewInterface;
-
-public  class MainActivity extends BaseActivity implements CameraDialog.CameraDialogParent {
+public final class MainActivity extends BaseActivity implements CameraDialog.CameraDialogParent {
 	private static final boolean DEBUG = true;	// TODO set false on release
 	private static final String TAG = "MainActivity";
 
@@ -104,7 +95,7 @@ public  class MainActivity extends BaseActivity implements CameraDialog.CameraDi
 	/**
 	 * for camera preview display
 	 */
-	private UVCCameraTextureView mUVCCameraView;
+	private CameraViewInterface mUVCCameraView;
 	/**
 	 * for open&start / stop&close camera preview
 	 */
@@ -131,7 +122,7 @@ public  class MainActivity extends BaseActivity implements CameraDialog.CameraDi
 		mCaptureButton.setVisibility(View.INVISIBLE);
 		final View view = findViewById(R.id.camera_view);
 		view.setOnLongClickListener(mOnLongClickListener);
-		mUVCCameraView = (UVCCameraTextureView)view;
+		mUVCCameraView = (CameraViewInterface)view;
 		mUVCCameraView.setAspectRatio(PREVIEW_WIDTH / (float)PREVIEW_HEIGHT);
 
 		mBrightnessButton = findViewById(R.id.brightness_button);
@@ -290,14 +281,14 @@ public  class MainActivity extends BaseActivity implements CameraDialog.CameraDi
 		updateItems();
 	}
 
-	private final USBMonitor.OnDeviceConnectListener mOnDeviceConnectListener = new USBMonitor.OnDeviceConnectListener() {
+	private final OnDeviceConnectListener mOnDeviceConnectListener = new OnDeviceConnectListener() {
 		@Override
 		public void onAttach(final UsbDevice device) {
 			Toast.makeText(MainActivity.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
-		public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
+		public void onConnect(final UsbDevice device, final UsbControlBlock ctrlBlock, final boolean createNew) {
 			if (DEBUG) Log.v(TAG, "onConnect:");
 			mCameraHandler.open(ctrlBlock);
 			startPreview();
@@ -305,7 +296,7 @@ public  class MainActivity extends BaseActivity implements CameraDialog.CameraDi
 		}
 
 		@Override
-		public void onDisconnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock) {
+		public void onDisconnect(final UsbDevice device, final UsbControlBlock ctrlBlock) {
 			if (DEBUG) Log.v(TAG, "onDisconnect:");
 			if (mCameraHandler != null) {
 				queueEvent(new Runnable() {

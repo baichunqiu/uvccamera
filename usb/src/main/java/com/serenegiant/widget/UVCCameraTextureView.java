@@ -39,8 +39,7 @@ import com.serenegiant.encoder.MediaEncoder;
 import com.serenegiant.encoder.MediaVideoEncoder;
 import com.serenegiant.glutils.EGLBase;
 import com.serenegiant.glutils.GLDrawer2D;
-import com.serenegiant.glutils.GLDrawer2DES2;
-import com.serenegiant.glutils.es2.GLHelper;
+import com.serenegiant.glutils.es1.GLHelper;
 import com.serenegiant.utils.FpsCounter;
 
 /**
@@ -49,7 +48,7 @@ import com.serenegiant.utils.FpsCounter;
  * you can show this view in the center of screen and keep the aspect ratio of content
  * XXX it is better that can set the aspect ratio as xml property
  */
-public class UVCCameraTextureView extends AspectScaledTextureView    // API >= 14
+public class UVCCameraTextureView extends AspectRatioTextureView    // API >= 14
 	implements TextureView.SurfaceTextureListener, CameraViewInterface {
 
 	private static final boolean DEBUG = true;	// TODO set false on release
@@ -424,9 +423,7 @@ public class UVCCameraTextureView extends AspectScaledTextureView    // API >= 1
 			public final void setEncoder(final MediaEncoder encoder) {
 				if (DEBUG) Log.v(TAG, "RenderThread#setEncoder:encoder=" + encoder);
 				if (encoder != null && (encoder instanceof MediaVideoEncoder)) {
-//					((MediaVideoEncoder)encoder).setEglContext(mEglSurface.getContext(), mTexId);
-					// TODO: 1/11/21 update
-					((MediaVideoEncoder)encoder).setEglContext(mEgl.getContext(), mTexId);
+					((MediaVideoEncoder)encoder).setEglContext(mEglSurface.getContext(), mTexId);
 				}
 				mEncoder = encoder;
 			}
@@ -567,7 +564,7 @@ public class UVCCameraTextureView extends AspectScaledTextureView    // API >= 1
 	    		mEglSurface = mEgl.createFromSurface(mSurface);
 	    		mEglSurface.makeCurrent();
 	    		// create drawing object
-	    		mDrawer = new GLDrawer2DES2(true);
+	    		mDrawer = new GLDrawer2D(true);
 			}
 
 	    	private final void release() {
