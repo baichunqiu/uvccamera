@@ -40,7 +40,10 @@ import com.serenegiant.encoder.MediaVideoEncoder;
 import com.serenegiant.glutils.EGLBase;
 import com.serenegiant.glutils.GLDrawer2D;
 import com.serenegiant.glutils.es1.GLHelper;
+import com.serenegiant.usb.Size;
 import com.serenegiant.utils.FpsCounter;
+
+import java.util.List;
 
 /**
  * change the view size with keeping the specified aspect ratio.
