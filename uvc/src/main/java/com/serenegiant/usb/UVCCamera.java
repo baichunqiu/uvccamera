@@ -330,6 +330,7 @@ public class UVCCamera {
 			mCurrentWidth = width;
 			mCurrentHeight = height;
 			mCurrentBandwidthFactor = bandwidthFactor;
+			Log.e(TAG,"widht = "+mCurrentWidth + " height = "+mCurrentHeight);
 		}
 	}
 

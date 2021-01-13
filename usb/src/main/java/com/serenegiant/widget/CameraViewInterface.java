@@ -49,8 +49,6 @@ public interface CameraViewInterface extends IAspectRatioView {
 
     public SurfaceTexture getSurfaceTexture();
 
-//    public List<Size> getSuportSize();
-
     public Surface getSurface();
 
     public boolean hasSurface();
