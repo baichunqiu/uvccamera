@@ -93,10 +93,10 @@ public class AspectRatioTextureView extends TextureView	// API >= 14
 			if (Math.abs(aspectDiff) > 0.01) {
 				if (aspectDiff > 0) {
 					// width priority decision
-					initialHeight = (int) (initialWidth / mRequestedAspect);
+					initialHeight = (int) (initialWidth / mRequestedAspect + 0.5);
 				} else {
 					// height priority decision
-					initialWidth = (int) (initialHeight * mRequestedAspect);
+					initialWidth = (int) (initialHeight * mRequestedAspect + 0.5);
 				}
 				initialWidth += horizPadding;
 				initialHeight += vertPadding;

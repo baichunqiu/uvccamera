@@ -527,14 +527,8 @@ abstract class AbstractUVCCameraHandler extends Handler {
             // 计算缩放比例
             float scaleWidth = ((float) maxWidth) / width;
             float scaleHeight = ((float) maxHeight) / height;
-            // 取得想要缩放的matrix参数
-            float scale = scaleHeight > scaleWidth ? scaleWidth : scaleHeight;
-            Log.e(TAG, "scale = " + scale + " scaleWidth= " + scaleWidth + " scaleHeight = " + scaleHeight);
-            if (scale < 1) {
-                return bm;
-            }
             Matrix matrix = new Matrix();
-            matrix.postScale(scale, scale);
+            matrix.postScale(scaleWidth, scaleHeight);
             // 得到新的图片
             Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
             bm.recycle();
