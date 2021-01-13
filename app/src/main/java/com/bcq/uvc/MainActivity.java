@@ -50,7 +50,7 @@ import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import com.serenegiant.utils.ViewAnimationHelper;
 import com.serenegiant.widget.CameraViewInterface;
 
-public final class MainActivity extends BaseActivity implements CameraDialog.CameraDialogParent {
+public final class MainActivity extends BaseActivity implements CameraDialog.CameraDialogListeren {
 	private static final boolean DEBUG = true;	// TODO set false on release
 	private static final String TAG = "MainActivity";
 
@@ -327,7 +327,7 @@ public final class MainActivity extends BaseActivity implements CameraDialog.Cam
 	 * @return
 	 */
 	@Override
-	public USBMonitor getUSBMonitor() {
+	public USBMonitor onGetUsbMonitor() {
 		return mUSBMonitor;
 	}
 
