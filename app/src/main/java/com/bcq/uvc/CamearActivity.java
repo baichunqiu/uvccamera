@@ -69,12 +69,12 @@ public final class CamearActivity extends YvcCameraActivity implements CameraDia
     public void onCheckedChanged(final CompoundButton compoundButton, final boolean isChecked) {
         switch (compoundButton.getId()) {
             case R.id.camera_button:
-                if (isChecked && !mCameraHandler.isOpened()) {
-                    CameraDialog.showDialog(CamearActivity.this);
-                } else {
-                    mCameraHandler.close();
-                    setCameraButton(false);
-                }
+//                if (isChecked && !mCameraHandler.isOpened()) {
+//                    CameraDialog.showDialog(CamearActivity.this);
+//                } else {
+//                    mCameraHandler.close();
+//                    setCameraButton(false);
+//                }
                 break;
         }
     }

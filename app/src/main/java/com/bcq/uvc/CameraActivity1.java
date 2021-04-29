@@ -38,11 +38,14 @@ import android.widget.ToggleButton;
 
 import com.serenegiant.common.BaseActivity;
 import com.serenegiant.usb.CameraDialog;
+import com.serenegiant.usb.DeviceFilter;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.USBMonitor.OnDeviceConnectListener;
 import com.serenegiant.usb.USBMonitor.UsbControlBlock;
 import com.serenegiant.usbcameracommon.UVCCameraHandler;
 import com.serenegiant.widget.CameraViewInterface;
+
+import java.util.List;
 
 public final class CameraActivity1 extends BaseActivity implements CameraDialog.CameraDialogListeren
         , OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -87,6 +90,17 @@ public final class CameraActivity1 extends BaseActivity implements CameraDialog.
         mUSBMonitor.register();
         if (mUVCCameraView != null)
             mUVCCameraView.onResume();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                connect();
+            }
+        }, 2000);
     }
 
     @Override
@@ -199,22 +213,42 @@ public final class CameraActivity1 extends BaseActivity implements CameraDialog.
         });
     }
 
+    private UsbDevice current;
+
+    protected void connect() {
+        final List<DeviceFilter> filter = DeviceFilter.getDeviceFilters(this, com.serenegiant.usbcameracommon.R.xml.device_filter);
+        List<UsbDevice> devices = mUSBMonitor.getDeviceList(filter.get(0));
+        if (null != devices && !devices.isEmpty()) {
+            UsbDevice device = devices.get(0);
+            if (device.equals(current)) {
+                return;
+            }
+            current = device;
+            Log.e(TAG, "connect :" + current.getDeviceName());
+            //申请权限连接设备
+            mUSBMonitor.requestPermission(current);
+        }
+    }
+
     private final OnDeviceConnectListener mOnDeviceConnectListener = new OnDeviceConnectListener() {
         @Override
         public void onAttach(final UsbDevice device) {
-            Toast.makeText(CameraActivity1.this, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CameraActivity1.this, "UVC设备绑定！", Toast.LENGTH_SHORT).show();
+            connect();
         }
 
         @Override
         public void onConnect(final UsbDevice device, final UsbControlBlock ctrlBlock, final boolean createNew) {
-            if (DEBUG) Log.v(TAG, "onConnect:");
+            if (DEBUG) Log.v(TAG, "UVC设备连接成功");
+            Toast.makeText(CameraActivity1.this, "UVC设备连接成功！", Toast.LENGTH_SHORT).show();
             mCameraHandler.open(ctrlBlock);
             startPreview();
         }
 
         @Override
         public void onDisconnect(final UsbDevice device, final UsbControlBlock ctrlBlock) {
-            if (DEBUG) Log.v(TAG, "onDisconnect:");
+            if (DEBUG) Log.v(TAG, "UVC 断开连接！");
+            Toast.makeText(CameraActivity1.this, "UVC设备断开连接！", Toast.LENGTH_SHORT).show();
             if (mCameraHandler != null) {
                 queueEvent(new Runnable() {
                     @Override
@@ -228,7 +262,7 @@ public final class CameraActivity1 extends BaseActivity implements CameraDialog.
 
         @Override
         public void onDettach(final UsbDevice device) {
-            Toast.makeText(CameraActivity1.this, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CameraActivity1.this, "UVC设备解绑", Toast.LENGTH_SHORT).show();
         }
 
         @Override

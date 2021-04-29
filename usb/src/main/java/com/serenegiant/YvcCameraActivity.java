@@ -48,7 +48,7 @@ public class YvcCameraActivity extends BaseActivity implements OnDeviceConnectLi
     private static final int PREVIEW_MODE = 1;//0:YUYV, other:MJPEG
 
     private USBMonitor mUSBMonitor;
-    protected UVCCameraHandler mCameraHandler;
+    private UVCCameraHandler mCameraHandler;
     private CameraViewInterface mUVCCameraView;
 
     /**

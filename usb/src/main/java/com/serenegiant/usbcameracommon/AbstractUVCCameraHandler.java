@@ -64,6 +64,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.logging.Logger;
 
 abstract class AbstractUVCCameraHandler extends Handler {
     private static final boolean DEBUG = true;    // TODO set false on release
@@ -502,6 +503,9 @@ abstract class AbstractUVCCameraHandler extends Handler {
             synchronized (mSync) {
                 mIsPreviewing = true;
             }
+            if (mIsPreviewing) {
+                mUVCCamera.setFrameCallback(previewIFrameCallback, UVCCamera.PIXEL_FORMAT_NV21);
+            }
             callOnStartPreview();
         }
 
@@ -515,6 +519,7 @@ abstract class AbstractUVCCameraHandler extends Handler {
                     mIsPreviewing = false;
                     mSync.notifyAll();
                 }
+                mUVCCamera.setFrameCallback(null, 0);
                 callOnStopPreview();
             }
             if (DEBUG) Log.v(TAG_THREAD, "handleStopPreview:finished");
@@ -627,10 +632,23 @@ abstract class AbstractUVCCameraHandler extends Handler {
             }
         }
 
+        private final IFrameCallback previewIFrameCallback = new IFrameCallback() {
+            @Override
+            public void onFrame(final ByteBuffer frame) {
+                // TODO: 1/11/21 数据帧回调
+                byte[] data = new byte[frame.remaining()];
+                frame.get(data);
+                Log.e("onFrame", "preview data = " + data.length);
+            }
+        };
+
         private final IFrameCallback mIFrameCallback = new IFrameCallback() {
             @Override
             public void onFrame(final ByteBuffer frame) {
                 // TODO: 1/11/21 数据帧回调
+//                byte[] data = new byte[frame.remaining()];
+//                frame.get(data);
+//                Log.e("onFrame", "data = " + data.length);
                 final MediaVideoBufferEncoder videoEncoder;
                 synchronized (mSync) {
                     videoEncoder = mVideoEncoder;
